@@ -84,7 +84,7 @@ const Science = () => {
             Patent-Pending Research
           </Badge>
           <h1 className="text-5xl lg:text-6xl font-bold text-foreground">
-            The Science Behind <span className="text-primary">Fiber-X</span>
+            The Science Behind <span className="text-primary">Fyber</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Our formula is built on decades of metabolic research, combining premium ingredients 
@@ -105,7 +105,7 @@ const Science = () => {
                 Evidence-Based Innovation
               </h2>
               <p className="text-lg text-foreground leading-relaxed">
-                Every ingredient in Fiber-X is selected based on rigorous clinical research, 
+                Every ingredient in Fyber is selected based on rigorous clinical research, 
                 with dosages optimized for maximum efficacy and safety.
               </p>
             </div>
@@ -119,7 +119,7 @@ const Science = () => {
               Four Mechanisms of Action
             </h2>
             <p className="text-xl text-muted-foreground">
-              How Fiber-X delivers comprehensive metabolic transformation
+              How Fyber delivers comprehensive metabolic transformation
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
@@ -213,7 +213,7 @@ const Science = () => {
                 Quality & Safety Standards
               </h2>
               <p className="text-lg text-foreground leading-relaxed">
-                Fiber-X is manufactured in GMP-certified facilities with rigorous quality controls. 
+                Fyber is manufactured in GMP-certified facilities with rigorous quality controls. 
                 Every batch undergoes third-party testing for purity, potency, and safety. 
                 Our patent-pending formula represents years of research and development, 
                 protected by intellectual property that ensures you're getting a truly unique, 

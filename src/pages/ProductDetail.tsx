@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import productImage from "@/assets/product-fiber-x.jpg";
+import productImage from "@/assets/product-fyber.jpg";
 import scienceBg from "@/assets/science-bg.jpg";
 
 const ProductDetail = () => {
@@ -38,7 +38,7 @@ const ProductDetail = () => {
 
   const faqs = [
     {
-      question: "How do I take Fiber-X?",
+      question: "How do I take Fyber?",
       answer: "Mix one sachet with 200-250ml of water, preferably 20-30 minutes before your largest meal of the day. Consume immediately after mixing for best results.",
     },
     {
@@ -47,11 +47,11 @@ const ProductDetail = () => {
     },
     {
       question: "Is it safe for long-term use?",
-      answer: "Yes. Fiber-X contains natural, clinically-tested ingredients. It's designed for sustained use and can be safely incorporated into your daily routine even after achieving your weight loss goals.",
+      answer: "Yes. Fyber contains natural, clinically-tested ingredients. It's designed for sustained use and can be safely incorporated into your daily routine even after achieving your weight loss goals.",
     },
     {
       question: "Can I take it with other supplements?",
-      answer: "Fiber-X is generally safe to combine with most supplements. However, take it 2-3 hours apart from medications or other supplements to ensure optimal absorption of all nutrients.",
+      answer: "Fyber is generally safe to combine with most supplements. However, take it 2-3 hours apart from medications or other supplements to ensure optimal absorption of all nutrients.",
     },
     {
       question: "What's your return policy?",
@@ -72,7 +72,7 @@ const ProductDetail = () => {
               </Badge>
               <img
                 src={productImage}
-                alt="Fiber-X"
+                alt="Fyber"
                 className="w-full h-[600px] object-cover"
               />
             </div>
@@ -81,7 +81,7 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-5xl font-bold text-foreground mb-3">Fiber-X</h1>
+              <h1 className="text-5xl font-bold text-foreground mb-3">Fyber</h1>
               <p className="text-xl text-muted-foreground mb-4">
                 Patent-Pending Daily Weight Loss Sachet
               </p>
@@ -289,7 +289,7 @@ const ProductDetail = () => {
                 <h3 className="text-2xl font-bold text-foreground mb-6">Clinical Evidence</h3>
                 <div className="space-y-4 text-foreground leading-relaxed">
                   <p>
-                    Fiber-X's patent-pending formula is backed by extensive clinical research demonstrating 
+                    Fyber's patent-pending formula is backed by extensive clinical research demonstrating 
                     significant improvements in weight loss, metabolic markers, and gut health.
                   </p>
                   <p>

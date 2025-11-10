@@ -20,7 +20,7 @@ const Cart = () => {
               Your Cart is Empty
             </h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Start your transformation journey by adding Fiber-X to your cart
+              Start your transformation journey by adding Fyber to your cart
             </p>
             <Link to="/shop">
               <Button size="lg" variant="premium">
@@ -37,8 +37,8 @@ const Cart = () => {
   // Future cart with items (placeholder structure)
   const cartItems = [
     {
-      id: "fiber-x-3pack",
-      name: "Fiber-X",
+      id: "fyber-3pack",
+      name: "Fyber",
       variant: "3 Month Supply",
       price: 8999,
       quantity: 1,

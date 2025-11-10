@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, Award, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import heroImage from "@/assets/hero-fiber-x.jpg";
-import productImage from "@/assets/product-fiber-x.jpg";
+import { AIAssistantDemo } from "@/components/AIAssistantDemo";
+import heroImage from "@/assets/hero-fyber.jpg";
+import productImage from "@/assets/product-fyber.jpg";
 import scienceBg from "@/assets/science-bg.jpg";
 
 const Home = () => {
@@ -72,7 +73,7 @@ const Home = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/product/fiber-x">
+                <Link to="/product/fyber">
                   <Button size="lg" variant="premium" className="w-full sm:w-auto">
                     Start Your Journey
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -90,7 +91,7 @@ const Home = () => {
               <div className="absolute inset-0 bg-gradient-accent opacity-20 blur-3xl rounded-full"></div>
               <img
                 src={heroImage}
-                alt="Fiber-X Premium Supplement"
+                alt="Fyber Premium Supplement"
                 className="relative rounded-3xl shadow-premium"
               />
             </div>
@@ -107,14 +108,14 @@ const Home = () => {
             </h2>
             <p className="text-xl text-muted-foreground leading-relaxed">
               Most weight loss approaches ignore the root cause: visceral fat accumulation 
-              and gut microbiome imbalance. Fiber-X addresses both through targeted, 
+              and gut microbiome imbalance. Fyber addresses both through targeted, 
               science-backed nutrition that works with your body's natural processes.
             </p>
           </div>
         </div>
       </section>
 
-      {/* How Fiber-X Works */}
+      {/* How Fyber Works */}
       <section className="py-24 bg-gradient-premium relative overflow-hidden">
         <div 
           className="absolute inset-0 opacity-5"
@@ -127,7 +128,7 @@ const Home = () => {
               <span className="text-sm font-medium text-primary">4 Pillars of Action</span>
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              How Fiber-X Works
+              How Fyber Works
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Our patent-pending formula combines four synergistic mechanisms 
@@ -180,6 +181,9 @@ const Home = () => {
         </div>
       </section>
 
+      {/* AI Assistant Demo */}
+      <AIAssistantDemo />
+
       {/* CTA Section */}
       <section className="py-24 bg-gradient-accent relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -189,9 +193,9 @@ const Home = () => {
           <p className="text-xl text-primary-foreground/90 mb-8">
             Join thousands who've achieved lasting weight loss with our patent-pending formula.
           </p>
-          <Link to="/product/fiber-x">
+          <Link to="/product/fyber">
             <Button size="lg" variant="outline" className="bg-card hover:bg-card/90 text-foreground border-0 shadow-lg">
-              Shop Fiber-X
+              Shop Fyber
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
@@ -205,7 +209,7 @@ const Home = () => {
             <div className="order-2 lg:order-1">
               <img
                 src={productImage}
-                alt="Fiber-X Product"
+                alt="Fyber Product"
                 className="rounded-3xl shadow-premium"
               />
             </div>

@@ -28,7 +28,7 @@ const About = () => {
   const milestones = [
     { year: "2022", title: "Foundation", description: "Research begins on precision fiber formulation" },
     { year: "2023", title: "Clinical Trials", description: "Patent-pending formula undergoes rigorous testing" },
-    { year: "2024", title: "Launch", description: "Fiber-X debuts to market with transformative results" },
+    { year: "2024", title: "Launch", description: "Fyber debuts to market with transformative results" },
     { year: "2025", title: "Expansion", description: "Growing portfolio of science-backed wellness solutions" },
   ];
 
@@ -56,7 +56,7 @@ const About = () => {
                 ignore the fundamental role of gut health and fiber nutrition in metabolic regulation.
               </p>
               <p className="text-lg text-foreground leading-relaxed">
-                After years of research and development, we created Fiber-X—a patent-pending formula 
+                After years of research and development, we created Fyber—a patent-pending formula 
                 that addresses weight loss at its root cause, combining premium fibers with metabolic 
                 cofactors for comprehensive, sustainable transformation.
               </p>

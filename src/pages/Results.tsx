@@ -15,7 +15,7 @@ const Results = () => {
       result: "Lost 18kg in 100 days",
       rating: 5,
       image: "👩",
-      review: "Fiber-X changed my relationship with food. No cravings, steady energy, and the weight just melted off. My metabolic markers improved dramatically.",
+      review: "Fyber changed my relationship with food. No cravings, steady energy, and the weight just melted off. My metabolic markers improved dramatically.",
       beforeWeight: 82,
       afterWeight: 64,
       category: "weight-loss",
@@ -51,7 +51,7 @@ const Results = () => {
       result: "Lost 14kg, gained confidence",
       rating: 5,
       image: "👨",
-      review: "The science behind this is solid. I've tried everything, but Fiber-X is the only thing that gave me sustainable results without feeling deprived.",
+      review: "The science behind this is solid. I've tried everything, but Fyber is the only thing that gave me sustainable results without feeling deprived.",
       beforeWeight: 88,
       afterWeight: 74,
       category: "weight-loss",
@@ -78,7 +78,7 @@ const Results = () => {
             Real Results, Real People
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Discover how Fiber-X has transformed the lives of thousands through 
+            Discover how Fyber has transformed the lives of thousands through 
             science-backed weight loss and metabolic optimization.
           </p>
         </div>
@@ -165,7 +165,7 @@ const Results = () => {
               Join the Transformation
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
-              These are just a few of the thousands who've achieved their health goals with Fiber-X. 
+              These are just a few of the thousands who've achieved their health goals with Fyber. 
               Your transformation story could be next.
             </p>
             <div className="text-sm text-muted-foreground">

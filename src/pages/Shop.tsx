@@ -3,14 +3,14 @@ import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import productImage from "@/assets/product-fiber-x.jpg";
+import productImage from "@/assets/product-fyber.jpg";
 
 const Shop = () => {
   // Future-ready for multiple products
   const products = [
     {
-      id: "fiber-x",
-      name: "Fiber-X",
+      id: "fyber",
+      name: "Fyber",
       tagline: "Daily Weight Loss Sachet",
       price: 3499,
       originalPrice: 4999,

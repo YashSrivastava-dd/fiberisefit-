@@ -41,7 +41,7 @@ const Contact = () => {
             Get in Touch
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Have questions about Fiber-X or need support? We're here to help you on your transformation journey.
+            Have questions about Fyber or need support? We're here to help you on your transformation journey.
           </p>
         </div>
 
