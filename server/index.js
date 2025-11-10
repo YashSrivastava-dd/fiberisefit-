@@ -1,9 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { chatRouter } from './routes/chat.js';
+import { authRouter } from './routes/auth.js';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env file from server directory
+dotenv.config({ path: join(__dirname, '.env') });
 
 // Verify API key is loaded
 if (!process.env.GEMINI_API_KEY) {
@@ -13,7 +20,9 @@ if (!process.env.GEMINI_API_KEY) {
   process.exit(1);
 }
 
-console.log('✅ Gemini API key loaded');
+if (process.env.NODE_ENV !== 'production') {
+  console.log('✅ Gemini API key loaded');
+}
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -28,9 +37,12 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
+app.use('/api/auth', authRouter);
 app.use('/api/ai', chatRouter);
 
 app.listen(PORT, () => {
-  console.log(`🚀 AI Chat API server running on http://localhost:${PORT}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  }
 });
 

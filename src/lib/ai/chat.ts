@@ -26,6 +26,13 @@ export interface ChatResponse {
 }
 
 /**
+ * Get the current auth token from localStorage
+ */
+function getAuthToken(): string | null {
+  return localStorage.getItem('auth_token');
+}
+
+/**
  * Send a message to the AI chat API
  * 
  * @param request - Chat request parameters
@@ -33,11 +40,18 @@ export interface ChatResponse {
  */
 export async function sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
   try {
+    const token = getAuthToken();
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(`${API_BASE_URL}/api/ai/chat`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(request),
     });
 

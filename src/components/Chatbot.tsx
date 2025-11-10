@@ -5,9 +5,11 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
 import { sendChatMessage, generateSessionId, type ChatMessage } from '@/lib/ai/chat';
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
 export function Chatbot() {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -58,6 +60,7 @@ export function Chatbot() {
       const response = await sendChatMessage({
         message: userMessage,
         sessionId,
+        userId: user?.userId || undefined,
       });
 
       // Add assistant response

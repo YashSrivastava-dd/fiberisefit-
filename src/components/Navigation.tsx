@@ -1,12 +1,25 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, Menu, X, User } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ShoppingCart, Menu, X, User, LogOut, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LoginModal } from "@/components/auth/LoginModal";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
 
   const navItems = [
     { name: "Shop", path: "/shop" },
@@ -50,9 +63,46 @@ export const Navigation = () => {
 
           {/* Right Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-            </Button>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium">Account</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Phone className="h-3 w-3" />
+                        {user?.phone}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={async () => {
+                      await logout();
+                      navigate('/');
+                    }}
+                    className="text-destructive cursor-pointer"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLoginModalOpen(true)}
+              >
+                <User className="h-4 w-4 mr-2" />
+                Login
+              </Button>
+            )}
             <Link to="/cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
@@ -91,11 +141,41 @@ export const Navigation = () => {
               </Link>
             ))}
             <div className="flex items-center space-x-4 pt-4 border-t border-border">
-              <Button variant="ghost" size="sm" className="flex-1">
-                <User className="h-4 w-4 mr-2" />
-                Account
-              </Button>
-              <Link to="/cart" className="flex-1">
+              {isAuthenticated ? (
+                <>
+                  <div className="flex-1 text-sm">
+                    <p className="font-medium">{user?.phone}</p>
+                    <p className="text-xs text-muted-foreground">Account</p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1"
+                    onClick={async () => {
+                      await logout();
+                      setIsMenuOpen(false);
+                      navigate('/');
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => {
+                    setLoginModalOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Login
+                </Button>
+              )}
+              <Link to="/cart" className="flex-1" onClick={() => setIsMenuOpen(false)}>
                 <Button variant="ghost" size="sm" className="w-full">
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   Cart (0)
@@ -105,6 +185,7 @@ export const Navigation = () => {
           </div>
         </div>
       )}
+      <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
     </nav>
   );
 };

@@ -27,9 +27,6 @@ function getGeminiClient() {
  * @returns {Promise<string>} AI response
  */
 export async function chatWithGemini({ message, sessionId, userId }) {
-  // VERSION CHECK: If you see this log, new code is loaded
-  console.log('🔵 chatWithGemini called - using updated model fallback logic');
-  
   // Initialize client here to ensure env vars are loaded
   const genAI = getGeminiClient();
 
@@ -55,8 +52,6 @@ export async function chatWithGemini({ message, sessionId, userId }) {
 
   for (const modelName of modelNames) {
     try {
-      console.log(`Attempting to use model: ${modelName}`);
-      
       // Initialize model
       const model = genAI.getGenerativeModel({ 
         model: modelName,
@@ -75,8 +70,6 @@ export async function chatWithGemini({ message, sessionId, userId }) {
       const result = await chat.sendMessage(message);
       const response = await result.response;
       const reply = response.text();
-
-      console.log(`✅ Successfully used model: ${modelName}`);
 
       // Update conversation history on success
       history.push(
@@ -102,7 +95,7 @@ export async function chatWithGemini({ message, sessionId, userId }) {
                     (error.message && error.message.includes('Not Found'));
       
       if (is404) {
-        console.log(`❌ Model ${modelName} not available (404), trying next model...`);
+        // Model not available, try next one
         continue;
       }
       
