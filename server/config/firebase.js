@@ -55,15 +55,15 @@ if (!admin.apps.length) {
 }
 
 // Export Firebase services only if initialized
+// Note: We only use Firebase Authentication, NOT Firestore
 let auth = null;
-let db = null;
 
 try {
   if (admin.apps.length > 0) {
     auth = admin.auth();
-    db = admin.firestore();
+    // Firestore is NOT initialized - we don't store user data in Firestore
     if (process.env.NODE_ENV !== 'production') {
-      console.log('✅ Firebase Admin SDK initialized successfully');
+      console.log('✅ Firebase Admin SDK initialized successfully (Auth only, no Firestore)');
     }
   } else {
     if (process.env.NODE_ENV !== 'production') {
@@ -74,6 +74,6 @@ try {
   console.error('❌ Firebase Admin SDK initialization failed:', error.message);
 }
 
-export { auth, db };
+export { auth };
 export default admin;
 

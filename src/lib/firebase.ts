@@ -1,6 +1,5 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
 
 // Firebase configuration
 // These should be set in your .env file or environment variables
@@ -17,8 +16,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase services
+// Only using Firebase Authentication - NOT Firestore
 export const auth = getAuth(app);
-export const db = getFirestore(app);
 
 export default app;
 

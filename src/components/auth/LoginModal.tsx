@@ -17,6 +17,28 @@ interface LoginModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+// Helper function to normalize phone number with +91 prefix
+const normalizePhoneNumber = (phone: string): string => {
+  // Remove all spaces
+  let cleaned = phone.replace(/\s/g, '');
+  
+  // Remove any non-digit characters (user might paste something with + or other chars)
+  cleaned = cleaned.replace(/\D/g, '');
+  
+  // If it starts with 91, remove it (to avoid +9191...)
+  if (cleaned.startsWith('91') && cleaned.length > 10) {
+    cleaned = cleaned.substring(2);
+  }
+  
+  // If it starts with 0, remove it
+  if (cleaned.startsWith('0')) {
+    cleaned = cleaned.substring(1);
+  }
+  
+  // Add +91 prefix
+  return '+91' + cleaned;
+};
+
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const { sendOTP, verifyOTP } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -31,12 +53,15 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       return;
     }
 
-    // Basic phone validation
-    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-    const normalizedPhone = phoneNumber.replace(/\s/g, '');
+    // Normalize phone number with +91 prefix if needed
+    const normalizedPhone = normalizePhoneNumber(phoneNumber);
+    
+    // Validate Indian phone number format: +91 followed by 10 digits
+    // Indian mobile numbers start with 6, 7, 8, or 9
+    const phoneRegex = /^\+91[6-9]\d{9}$/;
     
     if (!phoneRegex.test(normalizedPhone)) {
-      setError('Please enter a valid phone number');
+      setError('Please enter a valid 10-digit Indian phone number');
       return;
     }
 
@@ -70,7 +95,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     setError('');
 
     try {
-      const normalizedPhone = phoneNumber.replace(/\s/g, '');
+      const normalizedPhone = normalizePhoneNumber(phoneNumber);
       await verifyOTP(normalizedPhone, otp);
       toast({
         title: 'Login Successful',
@@ -94,15 +119,18 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     setError('');
   };
 
-  const handleClose = () => {
-    onOpenChange(false);
-    // Reset form after a delay to allow animation
-    setTimeout(() => {
-      setStep('phone');
-      setPhoneNumber('');
-      setOtp('');
-      setError('');
-    }, 200);
+  const handleClose = (open: boolean) => {
+    // Update parent state
+    onOpenChange(open);
+    // Reset form when closing
+    if (!open) {
+      setTimeout(() => {
+        setStep('phone');
+        setPhoneNumber('');
+        setOtp('');
+        setError('');
+      }, 200);
+    }
   };
 
   return (
@@ -123,22 +151,27 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           {step === 'phone' ? (
             <div className="space-y-4">
               <div>
-                <Input
-                  type="tel"
-                  placeholder="+1234567890"
-                  value={phoneNumber}
-                  onChange={(e) => {
-                    setPhoneNumber(e.target.value);
-                    setError('');
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSendOTP();
-                    }
-                  }}
-                  disabled={loading}
-                  className={error ? 'border-destructive' : ''}
-                />
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground font-medium">+91</span>
+                  <Input
+                    type="tel"
+                    placeholder="9876543210"
+                    value={phoneNumber}
+                    onChange={(e) => {
+                      // Only allow digits and spaces
+                      const value = e.target.value.replace(/[^\d\s]/g, '');
+                      setPhoneNumber(value);
+                      setError('');
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSendOTP();
+                      }
+                    }}
+                    disabled={loading}
+                    className={error ? 'border-destructive' : ''}
+                  />
+                </div>
                 {error && (
                   <p className="text-sm text-destructive mt-1">{error}</p>
                 )}
@@ -163,7 +196,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Code sent to: {phoneNumber}
+                  Code sent to: {normalizePhoneNumber(phoneNumber)}
                 </p>
                 <Input
                   type="text"

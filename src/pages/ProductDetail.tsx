@@ -1,16 +1,23 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Star, Check, Award, ShieldCheck, Truck, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/hooks/use-toast";
 import productImage from "@/assets/product-fyber.jpg";
 import scienceBg from "@/assets/science-bg.jpg";
 
 const ProductDetail = () => {
   const [selectedPack, setSelectedPack] = useState("3-pack");
   const [purchaseType, setPurchaseType] = useState<"one-time" | "subscription">("one-time");
+  const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const packs = [
     { id: "1-pack", size: "1 Month Supply", sachets: 30, price: 3499, originalPrice: 4999, savings: 0 },
@@ -19,6 +26,42 @@ const ProductDetail = () => {
   ];
 
   const selectedPackData = packs.find(p => p.id === selectedPack);
+
+  const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: '/product/fyber' } } });
+      return;
+    }
+
+    if (!selectedPackData) return;
+
+    const cartItemId = `fyber-${selectedPack}-${purchaseType}`;
+    
+    addToCart({
+      id: cartItemId,
+      name: "Fyber",
+      variant: selectedPackData.size,
+      packId: selectedPack,
+      price: selectedPackData.price,
+      image: productImage,
+      purchaseType,
+    });
+
+    toast({
+      title: "Added to Cart",
+      description: `${selectedPackData.size} has been added to your cart.`,
+    });
+  };
+
+  const handleBuyNow = () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: '/product/fyber' } } });
+      return;
+    }
+
+    handleAddToCart();
+    navigate('/checkout');
+  };
 
   const keyBenefits = [
     "Targets visceral fat accumulation",
@@ -209,10 +252,20 @@ const ProductDetail = () => {
 
             {/* CTA Buttons */}
             <div className="space-y-3">
-              <Button size="lg" variant="premium" className="w-full">
+              <Button 
+                size="lg" 
+                variant="premium" 
+                className="w-full"
+                onClick={handleAddToCart}
+              >
                 Add to Cart
               </Button>
-              <Button size="lg" variant="outline-premium" className="w-full">
+              <Button 
+                size="lg" 
+                variant="outline-premium" 
+                className="w-full"
+                onClick={handleBuyNow}
+              >
                 Buy Now
               </Button>
             </div>

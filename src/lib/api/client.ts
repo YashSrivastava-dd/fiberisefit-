@@ -73,8 +73,7 @@ export const authAPI = {
       user: {
         userId: string;
         phone: string;
-        createdAt: any;
-        lastLogin: any;
+        firebaseUid?: string;
       };
     }>('/api/auth/verify-otp', {
       method: 'POST',
@@ -89,8 +88,7 @@ export const authAPI = {
       user: {
         userId: string;
         phone: string;
-        createdAt: any;
-        lastLogin: any;
+        firebaseUid?: string;
       };
     }>('/api/auth/verify-firebase-token', {
       method: 'POST',
@@ -110,9 +108,7 @@ export const authAPI = {
       user: {
         userId: string;
         phone: string;
-        createdAt: any;
-        updatedAt: any;
-        lastLogin: any;
+        firebaseUid?: string;
       };
     }>('/api/auth/me', {
       method: 'GET',

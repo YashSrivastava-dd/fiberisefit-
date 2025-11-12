@@ -12,9 +12,7 @@ import { authAPI } from '@/lib/api/client';
 export interface User {
   userId: string;
   phone: string;
-  createdAt: any;
-  updatedAt?: any;
-  lastLogin?: any;
+  firebaseUid?: string;
 }
 
 interface AuthContextType {
@@ -34,8 +32,20 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 let confirmationResult: any = null;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  // Initialize state from localStorage on mount (for page refresh)
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+    return null;
+  });
+  const [token, setToken] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('auth_token');
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
   const [recaptchaVerifier, setRecaptchaVerifier] = useState<RecaptchaVerifier | null>(null);
 
@@ -81,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (process.env.NODE_ENV !== 'production') {
             console.error('Error verifying Firebase token:', error);
           }
+          // Only clear if token verification fails, not if Firebase auth is null
           await firebaseSignOut(auth);
           setToken(null);
           setUser(null);
@@ -88,10 +99,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           localStorage.removeItem('user');
         }
       } else {
-        setToken(null);
-        setUser(null);
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
+        // Firebase auth is null - check if we have a valid token in localStorage
+        const storedToken = localStorage.getItem('auth_token');
+        if (storedToken) {
+          // Try to verify the stored token is still valid
+          try {
+            const response = await authAPI.getMe();
+            // Token is valid, keep user logged in
+            setToken(storedToken);
+            setUser(response.user);
+            localStorage.setItem('user', JSON.stringify(response.user));
+          } catch (error) {
+            // Token is invalid or expired, clear everything
+            if (process.env.NODE_ENV !== 'production') {
+              console.error('Stored token invalid:', error);
+            }
+            setToken(null);
+            setUser(null);
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+          }
+        } else {
+          // No stored token, user is logged out
+          setToken(null);
+          setUser(null);
+        }
       }
       setLoading(false);
     });

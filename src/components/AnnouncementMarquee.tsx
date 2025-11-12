@@ -13,7 +13,7 @@ export const AnnouncementMarquee = () => {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 w-full bg-[hsl(145_20%_85%)] text-[hsl(145_30%_35%)] overflow-hidden border-b border-[hsl(145_25%_75%)] z-[60]"
+      className="fixed top-0 left-0 right-0 w-full bg-black text-white overflow-hidden border-b border-gray-800 z-[60]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

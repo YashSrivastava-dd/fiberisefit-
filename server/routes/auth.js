@@ -1,12 +1,12 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { auth, db } from '../config/firebase.js';
+import { auth } from '../config/firebase.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 // Check if Firebase is initialized
 const isFirebaseInitialized = () => {
   try {
-    return auth && db;
+    return auth;
   } catch (error) {
     return false;
   }
@@ -76,19 +76,14 @@ router.post('/refresh', authenticateToken, async (req, res) => {
       return res.status(500).json({ error: 'Firebase is not configured. Please check your environment variables.' });
     }
 
-    const { userId, phone } = req.user;
+    const { userId, phone, firebaseUid } = req.user;
 
-    // Verify user still exists
-    const userDoc = await db.collection('users').doc(userId).get();
-    if (!userDoc.exists) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Generate new token
+    // Generate new token with existing user data
     const token = jwt.sign(
       {
         userId,
         phone,
+        firebaseUid,
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
@@ -106,7 +101,7 @@ router.post('/refresh', authenticateToken, async (req, res) => {
 
 /**
  * GET /api/auth/me
- * Get current user information
+ * Get current user information from JWT token
  */
 router.get('/me', authenticateToken, async (req, res) => {
   try {
@@ -114,24 +109,15 @@ router.get('/me', authenticateToken, async (req, res) => {
       return res.status(500).json({ error: 'Firebase is not configured. Please check your environment variables.' });
     }
 
-    const { userId } = req.user;
+    const { userId, phone, firebaseUid } = req.user;
 
-    const userDoc = await db.collection('users').doc(userId).get();
-
-    if (!userDoc.exists) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    const userData = userDoc.data();
-
+    // Return user data from JWT token (no Firestore lookup)
     res.json({
       success: true,
       user: {
         userId,
-        phone: userData.phone,
-        createdAt: userData.createdAt,
-        updatedAt: userData.updatedAt,
-        lastLogin: userData.lastLogin,
+        phone,
+        firebaseUid,
       },
     });
   } catch (error) {
@@ -167,38 +153,12 @@ router.post('/verify-firebase-token', async (req, res) => {
 
       // Normalize phone number
       const normalizedPhone = phoneNumber.replace(/\s/g, '');
+      const userId = normalizedPhone;
 
-      // Create or update user in Firestore
-      const userRef = db.collection('users').doc(normalizedPhone);
-      const userDoc = await userRef.get();
-
-      const now = new Date();
-      let userId;
-
-      if (userDoc.exists) {
-        // Update existing user
-        await userRef.update({
-          updatedAt: now,
-          lastLogin: now,
-          firebaseUid: decodedToken.uid,
-        });
-        userId = normalizedPhone;
-      } else {
-        // Create new user
-        await userRef.set({
-          phone: normalizedPhone,
-          firebaseUid: decodedToken.uid,
-          createdAt: now,
-          updatedAt: now,
-          lastLogin: now,
-        });
-        userId = normalizedPhone;
-      }
-
-      // Generate JWT token
+      // Generate JWT token (no Firestore storage)
       const token = jwt.sign(
         {
-          userId: userId,
+          userId,
           phone: normalizedPhone,
           firebaseUid: decodedToken.uid,
         },
@@ -206,17 +166,13 @@ router.post('/verify-firebase-token', async (req, res) => {
         { expiresIn: JWT_EXPIRES_IN }
       );
 
-      // Get user data
-      const userData = (await userRef.get()).data();
-
       res.json({
         success: true,
         token,
         user: {
           userId,
           phone: normalizedPhone,
-          createdAt: userData.createdAt,
-          lastLogin: userData.lastLogin,
+          firebaseUid: decodedToken.uid,
         },
       });
     } catch (error) {

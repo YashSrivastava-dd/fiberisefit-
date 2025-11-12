@@ -3,10 +3,12 @@ import { ShoppingBag, Trash2, Plus, Minus, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/contexts/CartContext";
+import productImage from "@/assets/product-fyber.jpg";
 
 const Cart = () => {
-  // This will be connected to actual cart state management later
-  const isEmpty = true;
+  const { items, removeFromCart, updateQuantity, getSubtotal, getTotal } = useCart();
+  const isEmpty = items.length === 0;
 
   if (isEmpty) {
     return (
@@ -34,21 +36,8 @@ const Cart = () => {
     );
   }
 
-  // Future cart with items (placeholder structure)
-  const cartItems = [
-    {
-      id: "fyber-3pack",
-      name: "Fyber",
-      variant: "3 Month Supply",
-      price: 8999,
-      quantity: 1,
-      image: "/placeholder.svg",
-    },
-  ];
-
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = 0; // Free shipping
-  const total = subtotal + shipping;
+  const subtotal = getSubtotal();
+  const total = getTotal();
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-16">
@@ -58,47 +47,86 @@ const Cart = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {cartItems.map((item) => (
-              <Card key={item.id} className="p-6">
-                <div className="flex gap-6">
-                  {/* Product Image */}
-                  <div className="h-32 w-32 rounded-lg bg-secondary/30 flex-shrink-0"></div>
-
-                  {/* Product Details */}
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="text-xl font-semibold text-foreground">{item.name}</h3>
-                        <p className="text-sm text-muted-foreground">{item.variant}</p>
-                      </div>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-5 w-5 text-destructive" />
-                      </Button>
+            {items.map((item) => {
+              const itemPrice = item.purchaseType === 'subscription' 
+                ? item.price * 0.85 
+                : item.price;
+              const itemTotal = itemPrice * item.quantity;
+              
+              return (
+                <Card key={item.id} className="p-6">
+                  <div className="flex gap-6">
+                    {/* Product Image */}
+                    <div className="h-32 w-32 rounded-lg bg-secondary/30 flex-shrink-0 overflow-hidden">
+                      <img
+                        src={item.image || productImage}
+                        alt={item.name}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
 
-                    <div className="flex items-center justify-between mt-4">
-                      {/* Quantity */}
-                      <div className="flex items-center gap-3">
-                        <Button variant="outline" size="icon" className="h-8 w-8">
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="text-foreground font-medium w-8 text-center">
-                          {item.quantity}
-                        </span>
-                        <Button variant="outline" size="icon" className="h-8 w-8">
-                          <Plus className="h-4 w-4" />
+                    {/* Product Details */}
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="text-xl font-semibold text-foreground">{item.name}</h3>
+                          <p className="text-sm text-muted-foreground">{item.variant}</p>
+                          {item.purchaseType === 'subscription' && (
+                            <Badge variant="secondary" className="mt-1">
+                              Subscription
+                            </Badge>
+                          )}
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon"
+                          onClick={() => removeFromCart(item.id)}
+                        >
+                          <Trash2 className="h-5 w-5 text-destructive" />
                         </Button>
                       </div>
 
-                      {/* Price */}
-                      <div className="text-2xl font-bold text-foreground">
-                        ₹{(item.price / 100).toLocaleString()}
+                      <div className="flex items-center justify-between mt-4">
+                        {/* Quantity */}
+                        <div className="flex items-center gap-3">
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="text-foreground font-medium w-8 text-center">
+                            {item.quantity}
+                          </span>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </div>
+
+                        {/* Price */}
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-foreground">
+                            ₹{(itemTotal / 100).toLocaleString()}
+                          </div>
+                          {item.quantity > 1 && (
+                            <div className="text-sm text-muted-foreground">
+                              ₹{(itemPrice / 100).toLocaleString()} each
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
 
           {/* Order Summary */}

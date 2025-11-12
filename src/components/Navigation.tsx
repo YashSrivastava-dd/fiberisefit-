@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LoginModal } from "@/components/auth/LoginModal";
+import { CartDropdown } from "@/components/CartDropdown";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
@@ -103,14 +104,7 @@ export const Navigation = () => {
                 Login
               </Button>
             )}
-            <Link to="/cart">
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">
-                  0
-                </span>
-              </Button>
-            </Link>
+            <CartDropdown />
           </div>
 
           {/* Mobile Menu Button */}
@@ -175,12 +169,14 @@ export const Navigation = () => {
                   Login
                 </Button>
               )}
-              <Link to="/cart" className="flex-1" onClick={() => setIsMenuOpen(false)}>
-                <Button variant="ghost" size="sm" className="w-full">
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Cart (0)
-                </Button>
-              </Link>
+              <div className="flex-1" onClick={() => setIsMenuOpen(false)}>
+                <Link to="/cart">
+                  <Button variant="ghost" size="sm" className="w-full">
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Cart
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
